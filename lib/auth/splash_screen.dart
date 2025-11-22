@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:sustainable_app/auth/create_account_screen.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -24,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (status == AnimationStatus.completed) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const NextPage()),
+          MaterialPageRoute(builder: (_) => const CreateAccountScreen()),
         );
       }
     });
@@ -100,18 +102,4 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-class NextPage extends StatelessWidget {
-  const NextPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Welcome to the next page!",
-          style: TextStyle(fontSize: 30),
-        ),
-      ),
-    );
-  }
-}
