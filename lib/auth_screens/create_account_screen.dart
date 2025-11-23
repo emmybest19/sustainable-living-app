@@ -35,7 +35,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 //   bottomRight: Radius.circular(40),
                 // ),
                 child: Image.asset(
-                  'assets/auth_screens/create.png', // change to your asset
+                  'assets/auth/create.png', // change to your asset
                   height: height * 0.32,
                   width: double.infinity,
                   fit: BoxFit.cover,

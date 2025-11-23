@@ -320,6 +320,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  // void _handleCreateAccount() async {
+  //   if (!_formKey.currentState!.validate()) return;
+  //
+  //   setState(() => _isLoading = true);
+  //
+  //   final fullName = _nameCtrl.text.trim();
+  //   final email = _emailCtrl.text.trim();
+  //   final password = _passwordCtrl.text;
+  //
+  //   final error = await signup(fullName, email, password);
+  //
+  //   setState(() => _isLoading = false);
+  //
+  //   if (error != null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text(error)),
+  //     );
+  //   } else {
+  //     // Success — navigate to login (or home)
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Account created successfully!')),
+  //     );
+  //
+  //     // Optionally clear fields:
+  //     _formKey.currentState?.reset();
+  //
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+  //     );
+  //   }
+  // }
+
   void _handleCreateAccount() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -331,27 +364,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final error = await signup(fullName, email, password);
 
+    // If the widget was removed while awaiting, stop here.
+    if (!mounted) return;
+
     setState(() => _isLoading = false);
 
     if (error != null) {
+      // safe to use context because we checked mounted above
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
-    } else {
-      // Success — navigate to login (or home)
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully!')),
-      );
-
-      // Optionally clear fields:
-      _formKey.currentState?.reset();
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (ctx) => const LoginScreen()),
-      );
+      return;
     }
+
+    // Success — navigate to login (or home)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Account created successfully!')),
+    );
+
+    // Optionally clear fields:
+    _formKey.currentState?.reset();
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+    );
   }
+
 
   Widget _inputField({
     required TextEditingController controller,

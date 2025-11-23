@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
 
             // Logo
             Image.asset(
-              'assets/auth_screens/loader.png',
+              'assets/auth/loader.png',
               width: MediaQuery.of(context).size.width * 0.35, // responsive
             ),
 
