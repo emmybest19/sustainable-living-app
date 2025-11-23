@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:sustainable_app/auth/create_account_screen.dart';
+import 'package:sustainable_app/auth_screens/create_account_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
 
             // Logo
             Image.asset(
-              'assets/auth/loader.png',
+              'assets/auth_screens/loader.png',
               width: MediaQuery.of(context).size.width * 0.35, // responsive
             ),
 
