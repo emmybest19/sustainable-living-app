@@ -297,12 +297,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final cred = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      // Update displayName
+      // Update display name
       await cred.user?.updateDisplayName(fullname);
       await cred.user?.reload(); // ensure updated user data
-      return null;
+      return null; // success
     } on FirebaseAuthException catch (e) {
-      // Map some common codes to friendlier messages
       switch (e.code) {
         case 'email-already-in-use':
           return 'This email is already in use.';
@@ -313,45 +312,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         case 'operation-not-allowed':
           return 'Email/password accounts are not enabled in Firebase.';
         default:
-          return e.message ?? 'An unknown error occurred.';
+          return e.message ?? 'An unknown Firebase error occurred.';
       }
     } catch (e) {
-      return 'An error occurred. Please try again.';
+      return 'An error occurred: ${e.toString()}';
     }
   }
-
-  // void _handleCreateAccount() async {
-  //   if (!_formKey.currentState!.validate()) return;
-  //
-  //   setState(() => _isLoading = true);
-  //
-  //   final fullName = _nameCtrl.text.trim();
-  //   final email = _emailCtrl.text.trim();
-  //   final password = _passwordCtrl.text;
-  //
-  //   final error = await signup(fullName, email, password);
-  //
-  //   setState(() => _isLoading = false);
-  //
-  //   if (error != null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text(error)),
-  //     );
-  //   } else {
-  //     // Success — navigate to login (or home)
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Account created successfully!')),
-  //     );
-  //
-  //     // Optionally clear fields:
-  //     _formKey.currentState?.reset();
-  //
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (ctx) => const LoginScreen()),
-  //     );
-  //   }
-  // }
 
   void _handleCreateAccount() async {
     if (!_formKey.currentState!.validate()) return;
@@ -362,34 +328,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final email = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
 
-    final error = await signup(fullName, email, password);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    // If the widget was removed while awaiting, stop here.
-    if (!mounted) return;
+    try {
+      final cred = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
 
-    setState(() => _isLoading = false);
+      // Update display name
+      await cred.user?.updateDisplayName(fullName);
+      await cred.user?.reload();
 
-    if (error != null) {
-      // safe to use context because we checked mounted above
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error)),
+      // Success
+      if (!mounted) return;
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Account created successfully!')),
       );
-      return;
+
+      _formKey.currentState?.reset();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (ctx) => const LoginScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(
+              'FirebaseAuth Error: ${e.code}\nMessage: ${e.message ?? 'Unknown'}'),
+        ),
+      );
+    } catch (e, stack) {
+      if (!mounted) return;
+      // Prints the full stacktrace for debugging
+      debugPrint('Signup Exception: $e');
+      debugPrintStack(stackTrace: stack);
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Unexpected error: ${e.toString()}')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-
-    // Success — navigate to login (or home)
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Account created successfully!')),
-    );
-
-    // Optionally clear fields:
-    _formKey.currentState?.reset();
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (ctx) => const LoginScreen()),
-    );
   }
+
+
 
 
   Widget _inputField({

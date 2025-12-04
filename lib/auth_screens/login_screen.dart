@@ -379,7 +379,8 @@ import 'package:flutter/material.dart';
 
 import 'package:sustainable_app/auth_screens/forget_password_screen.dart';
 import 'package:sustainable_app/auth_screens/register_screen.dart';
-import 'package:sustainable_app/dashboards/home.dart';
+// import 'package:sustainable_app/dashboards/home.dart';
+import 'package:sustainable_app/screens/page_22_explore_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -444,14 +445,16 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = false);
 
     if (error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error)));
       return;
     }
 
     // Navigate safely after async
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (ctx) => const Home()),
+      MaterialPageRoute(builder: (ctx) => const MainNavigation()),
     );
   }
 
@@ -518,9 +521,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.trim().isEmpty) return 'Email is required';
+                    if (value == null || value.trim().isEmpty)
+                      return 'Email is required';
                     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                    if (!emailRegex.hasMatch(value.trim())) return 'Enter a valid email';
+                    if (!emailRegex.hasMatch(value.trim()))
+                      return 'Enter a valid email';
                     return null;
                   },
                 ),
@@ -531,7 +536,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Password",
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -541,7 +548,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                      icon: Icon(
+                        _obscure ? Icons.visibility : Icons.visibility_off,
+                      ),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
                     hintText: "Enter your password",
@@ -553,8 +562,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Password is required';
-                    if (value.length < 6) return 'Password must be at least 6 characters';
+                    if (value == null || value.isEmpty)
+                      return 'Password is required';
+                    if (value.length < 6)
+                      return 'Password must be at least 6 characters';
                     return null;
                   },
                 ),
@@ -567,10 +578,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (ctx) => const ForgotPasswordScreen()),
+                        MaterialPageRoute(
+                          builder: (ctx) => const ForgotPasswordScreen(),
+                        ),
                       );
                     },
-                    child: Text("Forgot Password?", style: TextStyle(color: Colors.green.shade600)),
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(color: Colors.green.shade600),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -589,10 +605,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _isLoading ? null : _onLoginPressed,
                     child: _isLoading
                         ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                    )
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
                         : const Text("Login", style: TextStyle(fontSize: 18)),
                   ),
                 ),
@@ -602,9 +621,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Divider
                 Row(
                   children: [
-                    Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
-                    const Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text("Or continue with")),
-                    Expanded(child: Container(height: 1, color: Colors.grey.shade300)),
+                    Expanded(
+                      child: Container(height: 1, color: Colors.grey.shade300),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: Text("Or continue with"),
+                    ),
+                    Expanded(
+                      child: Container(height: 1, color: Colors.grey.shade300),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 28),
@@ -616,17 +642,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
                         ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Google sign-in not implemented yet')),
+                            const SnackBar(
+                              content: Text(
+                                'Google sign-in not implemented yet',
+                              ),
+                            ),
                           );
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset('assets/google.png', height: 22),
+                            Image.asset('assets/auth/google.png', height: 22),
                             const SizedBox(width: 8),
                             const Text("Google"),
                           ],
@@ -638,11 +670,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
                         ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Apple sign-in not implemented yet')),
+                            const SnackBar(
+                              content: Text(
+                                'Apple sign-in not implemented yet',
+                              ),
+                            ),
                           );
                         },
                         child: Row(
@@ -663,15 +701,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Don't have an account?", style: TextStyle(color: Colors.grey.shade600)),
+                    Text(
+                      "Don't have an account?",
+                      style: TextStyle(color: Colors.grey.shade600),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (ctx) => const RegisterScreen()),
+                          MaterialPageRoute(
+                            builder: (ctx) => const RegisterScreen(),
+                          ),
                         );
                       },
-                      child: const Text("Sign Up", style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600)),
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ],
                 ),
